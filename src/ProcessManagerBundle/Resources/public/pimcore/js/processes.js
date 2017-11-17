@@ -70,6 +70,23 @@ pimcore.plugin.processmanager.processes = Class.create({
         tabPanel.setActiveItem(this.layoutId);
     },
 
+    showReportWindow: function(data) {
+        var raportWin = new Ext.Window({
+            title: data.report.title,
+            modal: true,
+            iconCls: "pimcore_icon_reports",
+            width: 700,
+            height: 400,
+            html: data.report.html,
+            autoScroll: true,
+            bodyStyle: "padding: 10px; background:#fff;",
+            buttonAlign: "center",
+            shadow: false,
+            closable: true
+        });
+        raportWin.show();
+    },
+
     getGrid: function () {
         return {
             xtype: 'grid',
@@ -94,8 +111,34 @@ pimcore.plugin.processmanager.processes = Class.create({
                         xtype: 'progressbarwidget',
                         textTpl: [
                             '{percent:number("0")}% ' + t('processmanager_text')
-                        ]
+                        ],
+
                     }
+                },
+                {
+                    xtype:'actioncolumn',
+                    width:50,
+                    items: [
+                        {
+                            iconCls : 'pimcore_icon_reports',
+                            tooltip: t('Report'),
+                            handler: function(grid, rowIndex) {
+                                var rec = grid.getStore().getAt(rowIndex);
+
+                                Ext.Ajax.request({
+                                    url: '/admin/process_manager/reports/get',
+                                    params : {
+                                        id : rec.get("id")
+                                    },
+                                    success: function (response, options) {
+                                        var data = Ext.decode(response.responseText);
+                                        this.showReportWindow(data);
+                                    }.bind(this)
+                                });
+
+                            }.bind(this)
+                        }
+                    ]
                 },
                 {
                     xtype:'actioncolumn',

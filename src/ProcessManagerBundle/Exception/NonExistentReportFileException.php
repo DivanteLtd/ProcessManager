@@ -4,9 +4,11 @@
  * @author  Wojciech Peisert <wpeisert@divante.pl>
  */
 
-class NonExistentReportFileException extends Exception
+namespace ProcessManagerBundle\Exception;
+
+class NonExistentReportFileException extends \Exception
 {
-    public function __construct($processId = 0, Throwable $previous = null)
+    public function __construct($processId = 0, \Throwable $previous = null)
     {
         parent::__construct("Non existent log file for process: $processId", 1, $previous);
     }

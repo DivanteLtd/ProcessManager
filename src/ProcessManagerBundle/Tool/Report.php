@@ -5,6 +5,7 @@
  */
 
 namespace ProcessManagerBundle\Tool;
+use ProcessManagerBundle\Exception\NonExistentReportFileException;
 
 /**
  * Class Report
@@ -146,7 +147,7 @@ class Report
     {
         $filePath = PIMCORE_LOG_DIRECTORY . '/imports/process_' . $this->processId . '.log';
         if (!file_exists($filePath)) {
-            throw new \NonExistentReportFileException($this->processId);
+            throw new NonExistentReportFileException($this->processId);
         }
 
         $this->currentObjectNo = 0;

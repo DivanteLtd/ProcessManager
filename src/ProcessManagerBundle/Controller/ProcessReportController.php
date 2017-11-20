@@ -15,6 +15,7 @@
 namespace ProcessManagerBundle\Controller;
 
 use Pimcore\Bundle\AdminBundle\Controller\AdminController;
+use ProcessManagerBundle\Exception\NonExistentReportFileException;
 use ProcessManagerBundle\Model\ExecutableInterface;
 use ProcessManagerBundle\Tool\Report;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,14 +31,32 @@ class ProcessReportController extends AdminController
      */
     public function getReportAction(Request $request)
     {
+        $success = true;
+        $html    = '';
+        $message = '';
+
         $id = $request->get('id');
-        $report = new Report($id);
+
+        try {
+            $report = new Report($id);
+            $html = $report->getReportHtml();
+        } catch (NonExistentReportFileException $e) {
+            $success = false;
+            $message = "No report data";
+        } catch (\Exception $e) {
+            $success = false;
+            $message = $e->getMessage();
+        }
+
         return $this->json(
-            ['report' =>
-                [
-                    'title' => 'Report for process: ' . $id,
-                    'html'  => $report->getReportHtml()
-                ]
+            [
+                'success' => $success,
+                'message' => $message,
+                'report'  =>
+                    [
+                        'title' => 'Report for process: ' . $id,
+                        'html'  => $html,
+                    ]
             ]
         );
     }

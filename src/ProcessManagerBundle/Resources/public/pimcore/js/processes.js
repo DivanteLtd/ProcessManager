@@ -87,6 +87,23 @@ pimcore.plugin.processmanager.processes = Class.create({
         raportWin.show();
     },
 
+    showErrorWindow: function(message) {
+        var errWin = new Ext.Window({
+            title: "ERROR",
+            modal: true,
+            iconCls: "pimcore_icon_error",
+            width: 600,
+            height: 300,
+            html: message,
+            autoScroll: true,
+            bodyStyle: "padding: 10px; background:#fff;",
+            buttonAlign: "center",
+            shadow: false,
+            closable: true
+        });
+        errWin.show();
+    },
+
     getGrid: function () {
         return {
             xtype: 'grid',
@@ -116,6 +133,7 @@ pimcore.plugin.processmanager.processes = Class.create({
                     }
                 },
                 {
+                    text : t('processmanager_report'),
                     xtype:'actioncolumn',
                     width:50,
                     items: [
@@ -132,7 +150,11 @@ pimcore.plugin.processmanager.processes = Class.create({
                                     },
                                     success: function (response, options) {
                                         var data = Ext.decode(response.responseText);
-                                        this.showReportWindow(data);
+                                        if (data.success) {
+                                            this.showReportWindow(data);
+                                        } else {
+                                            this.showErrorWindow(data.message);
+                                        }
                                     }.bind(this)
                                 });
 

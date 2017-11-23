@@ -102,12 +102,22 @@ class Report
 
         $items[] = 'Errors count: ' . $this->errorsCnt;
 
+        $link = '/admin/process_manager/reports/log-download/' . $this->processId;
+        $items[] = "Log file: <a href=\"$link\" target=\"_blank\">download</a>";
+
         if (count($this->errors)) {
             $items[] = 'Errors: ';
             $items = array_merge($items, $this->errors);
         }
 
         return implode('<br />', $items);
+    }
+
+    public static function getReportLogPath($id)
+    {
+        $filePath = PIMCORE_LOG_DIRECTORY . '/imports/process_' . $id . '.log';
+
+        return $filePath;
     }
 
     protected function doSummary()
@@ -126,7 +136,7 @@ class Report
                 $status = $this->productsStatuses[$iter];
 
                 if (isset($status['error'])) {
-                    $this->errors[] = 'Line ' . ($iter+1) . '. Error: ' . $status['error'];
+                    $this->errors[] = '<b>Line ' . ($iter+1) . '. Error: </b>' . $status['error'];
                     $this->errorsCnt++;
                 } elseif (isset($status['ignore_filtered'])) {
                     $this->skippedFiltered++;
@@ -145,7 +155,7 @@ class Report
 
     protected function doReport()
     {
-        $filePath = PIMCORE_LOG_DIRECTORY . '/imports/process_' . $this->processId . '.log';
+        $filePath = self::getReportLogPath($this->processId);
         if (!file_exists($filePath)) {
             throw new NonExistentReportFileException($this->processId);
         }

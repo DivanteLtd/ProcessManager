@@ -18,12 +18,33 @@ use Pimcore\Bundle\AdminBundle\Controller\AdminController;
 use ProcessManagerBundle\Exception\NonExistentReportFileException;
 use ProcessManagerBundle\Model\ExecutableInterface;
 use ProcessManagerBundle\Tool\Report;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class ProcessReportController extends AdminController
 {
+    /**
+     * @Route("/admin/process_manager/reports/log-download/{id}")
+     * @return BinaryFileResponse
+     * @return JsonResponse
+     */
+    public function LogDownloadAction($id)
+    {
+        $filePath = Report::getReportLogPath($id);
+        if (!file_exists($filePath)) {
+            throw new NonExistentReportFileException($id);
+        }
+
+        $response = new BinaryFileResponse($filePath);
+        $response->headers->set('Content-Type', 'text/plain');
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+
+        return $response;
+    }
+
     /**
      * @Route("/admin/process_manager/reports/get")
      * @param Request $request

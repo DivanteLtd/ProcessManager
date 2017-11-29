@@ -79,13 +79,13 @@ class Report
     public function getReportHtml()
     {
         $items = [];
-        $items[] = 'Total objects: ' . $this->total;
+        $items[] = 'Total lines processed: ' . $this->total;
         if ($this->importedNew) {
-            $items[] = 'Imported new: ' . $this->importedNew;
+            $items[] = 'Imported new objects: ' . $this->importedNew;
         }
 
         if ($this->importedExisting) {
-            $items[] = 'Updated: ' . $this->importedExisting;
+            $items[] = 'Updates: ' . $this->importedExisting;
         }
 
         if ($this->skippedNew) {

@@ -3,6 +3,8 @@ imports:
     - { resource: "services/installer.yml" }
 
 services:
+
+
   ### Registries
   process_manager.registry.processes:
     class: CoreShop\Component\Registry\ServiceRegistry
@@ -30,3 +32,10 @@ services:
       resource: '../../Controller'
       public: true
       tags: ['controller.service_arguments']
+
+  ### Event listeners
+  ProcessManagerBundle\EventListener\CronListener:
+    tags:
+      - { name: kernel.event_listener, event: pimcore.system.maintenance, method: run, arguments: }
+    arguments:
+      - '@process_manager.registry.processes'

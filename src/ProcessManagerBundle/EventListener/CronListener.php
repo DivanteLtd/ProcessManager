@@ -16,6 +16,7 @@ namespace ProcessManagerBundle\EventListener;
 
 use CoreShop\Component\Registry\ServiceRegistry;
 use Cron\CronExpression;
+use Pimcore\Log\ApplicationLogger;
 use ProcessManagerBundle\Model\Executable;
 
 class CronListener
@@ -38,7 +39,12 @@ class CronListener
     {
         /** @var Executable $executable */
         foreach ($this->getExecutables() as $executable) {
-            $cron = CronExpression::factory($executable->getCron());
+            try {
+                $cron = CronExpression::factory($executable->getCron());
+            } catch (\Exception $e) {
+                continue;
+            }
+
             $lastrun =  new \DateTime();
             $lastrun->setTimestamp($executable->getLastrun());
 

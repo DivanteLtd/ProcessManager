@@ -17,7 +17,7 @@
     }
   ],
   "require": {
-    "coreshop/resource-bundle": "^2.0",
+    "coreshop/resource-bundle": "^2.0@dev",
     "dragonmantank/cron-expression": "dev-master"
   },
   "autoload": {

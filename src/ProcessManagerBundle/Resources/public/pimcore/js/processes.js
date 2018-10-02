@@ -23,7 +23,6 @@ pimcore.plugin.processmanager.processes = Class.create({
 
     initialize: function () {
         this.createStore();
-        this.reloadProcesses();
     },
 
     reloadProcesses: function() {
@@ -63,7 +62,7 @@ pimcore.plugin.processmanager.processes = Class.create({
         });
 
         pimcore.globalmanager.add(this.storeId, store);
-        store.load();
+        this.reloadProcesses();
     },
 
     activate: function () {
@@ -78,7 +77,7 @@ pimcore.plugin.processmanager.processes = Class.create({
             iconCls: "pimcore_icon_reports",
             width: 700,
             height: 400,
-            html: data.report.html,
+            html: data.report,
             autoScroll: true,
             bodyStyle: "padding: 10px; background:#fff;",
             buttonAlign: "center",
@@ -140,12 +139,12 @@ pimcore.plugin.processmanager.processes = Class.create({
                     items: [
                         {
                             iconCls : 'pimcore_icon_reports',
-                            tooltip: t('Report'),
+                            tooltip: t('processmanager_report'),
                             handler: function(grid, rowIndex) {
                                 var rec = grid.getStore().getAt(rowIndex);
 
                                 Ext.Ajax.request({
-                                    url: '/admin/process_manager/reports/get',
+                                    url: '/admin/process_manager/processes/log-report',
                                     params : {
                                         id : rec.get("id")
                                     },
@@ -159,6 +158,21 @@ pimcore.plugin.processmanager.processes = Class.create({
                                     }.bind(this)
                                 });
 
+                            }.bind(this)
+                        }
+                    ]
+                },
+                {
+                    text : t('processmanager_log_download'),
+                    xtype:'actioncolumn',
+                    width:50,
+                    items: [
+                        {
+                            iconCls : 'pimcore_icon_download',
+                            tooltip: t('processmanager_log_download'),
+                            handler: function(grid, rowIndex) {
+                                var id = grid.getStore().getAt(rowIndex).get('id');
+                                pimcore.helpers.download("/admin/process_manager/processes/log-download?id=" + id);
                             }.bind(this)
                         }
                     ]

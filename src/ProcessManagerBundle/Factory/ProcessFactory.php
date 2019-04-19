@@ -47,11 +47,17 @@ class ProcessFactory implements ProcessFactoryInterface
         int $total = 1,
         int $progress = 0,
         int $started = -1,
-        int $completed = 0
+        int $completed = 0,
+        bool $stoppable = false,
+        bool $running = true,
+        string $hash = ''
     ) {
         if($started == -1){
             $started = time();
         }
-        return new $this->model($name, $type, $message, $total, $progress, $started, $completed);
+        if (!$hash) {
+            $hash = uniqid(time());
+        }
+        return new $this->model($name, $type, $message, $total, $progress, $started, $completed, $stoppable, $running, $hash);
     }
 }

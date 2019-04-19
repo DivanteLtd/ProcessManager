@@ -120,7 +120,7 @@ pimcore.plugin.processmanager.processes = Class.create({
                 {
                     text: t('name'),
                     dataIndex: 'name',
-                    width: 300
+                    width: 200
                 },
                 {
                     text: t('processmanager_message'),
@@ -227,6 +227,41 @@ pimcore.plugin.processmanager.processes = Class.create({
                                     cls: 'processmanager_artifact_download',
                                     handler: function () {
                                         pimcore.helpers.download("/admin/asset/download?id=" + artifact)
+                                    }
+                                });
+                            }
+                        }, 50);
+
+                        return Ext.String.format('<span id="{0}"></span>', id);
+                    }
+                },
+                {
+                    text : t('processmanager_status'),
+                    xtype:'actioncolumn',
+                    width: 50,
+                    renderer: function(value, metadata, record) {
+                        var stoppable = record.data.stoppable;
+                        var running = record.data.running;
+                        var processId = record.data.id;
+
+                        console.log('id: ' + processId + ' runnning: ' + running);
+
+                        var id = Ext.id();
+                        Ext.defer(function () {
+                            if (Ext.get(id) && stoppable && running) {
+                                new Ext.button.Button({
+                                    renderTo: id,
+                                    iconCls: 'pimcore_icon_stop',
+                                    handler: function () {
+                                        Ext.Ajax.request({
+                                            url: '/admin/process_manager/processes/stop?id=' + processId,
+                                            method: 'GET',
+                                            success: function () {
+                                                //We don't reload the store here, this triggers a new timer, we just delete the
+                                                //record manually from the store
+                                                alert('process stopped!');
+                                            }.bind(this)
+                                        });
                                     }
                                 });
                             }

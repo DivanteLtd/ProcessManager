@@ -77,4 +77,23 @@ class ProcessController extends ResourceController
 
         return $handler->getLog($process);
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function stopAction(Request $request)
+    {
+        /** @var ProcessInterface $process */
+        $process = $this->findOr404($request->get('id'));
+
+        $process->setRunning(false);
+        $process->save();
+
+        return $this->json(
+            [
+                'success' => true,
+            ]
+        );
+    }
 }

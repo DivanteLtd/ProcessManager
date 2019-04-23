@@ -120,7 +120,7 @@ pimcore.plugin.processmanager.processes = Class.create({
                 {
                     text: t('name'),
                     dataIndex: 'name',
-                    width: 200
+                    width: 300
                 },
                 {
                     text: t('processmanager_message'),
@@ -252,13 +252,9 @@ pimcore.plugin.processmanager.processes = Class.create({
                         var running = record.data.running;
                         var processId = record.data.id;
 
-                        console.log('stoppable: ' + stoppable + ' running: ' + running);
                         if (stoppable && !running) {
-                            console.log('returning stopped');
                             return 'STOPPED';
                         }
-
-                        console.log('stoppable: ' + stoppable + ' running: ' + running);
 
                         var id = Ext.id();
                         Ext.defer(function () {
@@ -271,9 +267,7 @@ pimcore.plugin.processmanager.processes = Class.create({
                                             url: '/admin/process_manager/processes/stop?id=' + processId,
                                             method: 'GET',
                                             success: function () {
-                                                //We don't reload the store here, this triggers a new timer, we just delete the
-                                                //record manually from the store
-                                                alert('process stopped!');
+                                                Ext.Msg.alert(t('success'), t('processmanager_process_stopped'));
                                             }.bind(this)
                                         });
                                     }

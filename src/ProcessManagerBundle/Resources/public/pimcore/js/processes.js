@@ -237,14 +237,28 @@ pimcore.plugin.processmanager.processes = Class.create({
                 },
                 {
                     text : t('processmanager_status'),
-                    xtype:'actioncolumn',
-                    width: 50,
+                    width: 100,
+
+                    renderer: function (value) {
+                        if (value == 0) {
+                            return null;
+                        } else {
+                            return Ext.Date.format(Ext.Date.parse(value, "U"), "Y-m-d H:i:s");
+                        }
+                    },
+
                     renderer: function(value, metadata, record) {
                         var stoppable = record.data.stoppable;
                         var running = record.data.running;
                         var processId = record.data.id;
 
-                        console.log('id: ' + processId + ' runnning: ' + running);
+                        console.log('stoppable: ' + stoppable + ' running: ' + running);
+                        if (stoppable && !running) {
+                            console.log('returning stopped');
+                            return 'STOPPED';
+                        }
+
+                        console.log('stoppable: ' + stoppable + ' running: ' + running);
 
                         var id = Ext.id();
                         Ext.defer(function () {

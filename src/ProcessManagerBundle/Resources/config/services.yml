@@ -90,3 +90,7 @@ services:
         class: ProcessManagerBundle\Process\CompositeProcessStartupFormResolver
         arguments:
             - '@process_manager.registry.startup_form_resolver'
+
+    process_manager.run_manager:
+        class: ProcessManagerBundle\Process\RunManager
+        public: true

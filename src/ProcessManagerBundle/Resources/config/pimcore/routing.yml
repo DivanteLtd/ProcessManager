@@ -31,3 +31,7 @@ process_manager_admin_processes:
         path: log-report
         action: logReport
         methods: [GET]
+      stop:
+        path: stop
+        action: stop
+        methods: [GET]

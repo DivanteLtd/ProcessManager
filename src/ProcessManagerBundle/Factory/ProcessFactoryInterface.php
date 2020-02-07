@@ -26,7 +26,21 @@ interface ProcessFactoryInterface extends FactoryInterface
      * @param int         $progress
      * @param int         $started
      * @param int         $completed
+     * @param bool        $stoppable
+     * @param bool        $running
+     * @param string      $hash
      * @return mixed
      */
-    public function createProcess(string $name, string $type = null, string $message = '', int $total = 1, int $progress = 0, int $started = -1, int $completed = 0);
+    public function createProcess(
+        string $name,
+        string $type = null,
+        string $message = '',
+        int $total = 1,
+        int $progress = 0,
+        int $started = -1,
+        int $completed = 0,
+        bool $stoppable = false,
+        bool $running = true,
+        string $hash = ''
+    );
 }

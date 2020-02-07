@@ -101,4 +101,34 @@ interface ProcessInterface extends ResourceInterface
      * @return null|Asset
      */
     public function getArtifact();
+
+    /**
+     * @param bool $stoppable
+     */
+    public function setStoppable(bool $stoppable);
+
+    /**
+     * @return bool
+     */
+    public function getStoppable(): bool;
+
+    /**
+     * @param bool $running
+     */
+    public function setRunning(bool $running);
+
+    /**
+     * @return bool
+     */
+    public function getRunning(): bool;
+
+    /**
+     * @param string $hash
+     */
+    public function setHash(string $hash);
+
+    /**
+     * @return string
+     */
+    public function getHash(): string;
 }

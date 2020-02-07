@@ -14,7 +14,15 @@
 
 namespace ProcessManagerBundle\Controller;
 
+use CoreShop\Bundle\ResourceBundle\Controller\EventDispatcherInterface;
 use CoreShop\Bundle\ResourceBundle\Controller\ResourceController;
+use CoreShop\Bundle\ResourceBundle\Controller\ResourceFormFactoryInterface;
+use CoreShop\Bundle\ResourceBundle\Controller\ViewHandler;
+use CoreShop\Bundle\ResourceBundle\Form\Helper\ErrorSerializer;
+use CoreShop\Component\Resource\Factory\FactoryInterface;
+use CoreShop\Component\Resource\Metadata\MetadataInterface;
+use CoreShop\Component\Resource\Repository\RepositoryInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use ProcessManagerBundle\Model\ProcessInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,5 +84,32 @@ class ProcessController extends ResourceController
         );
 
         return $handler->getLog($process);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function stopAction(Request $request)
+    {
+        /** @var ProcessInterface $process */
+        $process = $this->findOr404($request->get('id'));
+
+        $runManager = $this->container->get('process_manager.run_manager');
+        if ($runManager instanceof \ProcessManagerBundle\Process\RunManager) {
+            $runManager->setStopProcess($process->getHash());
+        }
+
+        /*
+        $process->setRunning(false);
+        $process->save();
+        \Pimcore::collectGarbage();
+        */
+
+        return $this->json(
+            [
+                'success' => true,
+            ]
+        );
     }
 }

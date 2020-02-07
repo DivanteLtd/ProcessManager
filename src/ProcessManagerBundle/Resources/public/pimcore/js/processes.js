@@ -236,6 +236,49 @@ pimcore.plugin.processmanager.processes = Class.create({
                     }
                 },
                 {
+                    text : t('processmanager_status'),
+                    width: 100,
+
+                    renderer: function (value) {
+                        if (value == 0) {
+                            return null;
+                        } else {
+                            return Ext.Date.format(Ext.Date.parse(value, "U"), "Y-m-d H:i:s");
+                        }
+                    },
+
+                    renderer: function(value, metadata, record) {
+                        var stoppable = record.data.stoppable;
+                        var running = record.data.running;
+                        var processId = record.data.id;
+
+                        if (stoppable && !running) {
+                            return 'STOPPED';
+                        }
+
+                        var id = Ext.id();
+                        Ext.defer(function () {
+                            if (Ext.get(id) && stoppable && running) {
+                                new Ext.button.Button({
+                                    renderTo: id,
+                                    iconCls: 'pimcore_icon_stop',
+                                    handler: function () {
+                                        Ext.Ajax.request({
+                                            url: '/admin/process_manager/processes/stop?id=' + processId,
+                                            method: 'GET',
+                                            success: function () {
+                                                Ext.Msg.alert(t('success'), t('processmanager_process_stopped'));
+                                            }.bind(this)
+                                        });
+                                    }
+                                });
+                            }
+                        }, 50);
+
+                        return Ext.String.format('<span id="{0}"></span>', id);
+                    }
+                },
+                {
                     xtype:'actioncolumn',
                     width:50,
                     items: [

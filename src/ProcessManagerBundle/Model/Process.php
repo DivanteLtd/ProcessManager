@@ -66,14 +66,44 @@ class Process extends AbstractModel implements ProcessInterface
     public $artifact;
 
     /**
-     * @param string      $name
-     * @param string|null $type
-     * @param string      $message
-     * @param int         $total
-     * @param int         $progress
+     * @var null|bool
      */
-    public function __construct(string $name, string $type = null, string $message = '', int $total = 1, int $progress = 0, int $started = 0, int $completed = 0)
-    {
+    public $stoppable;
+
+    /**
+     * @var null|bool
+     */
+    public $running;
+
+    /**
+     * @var string
+     */
+    public $hash;
+
+    /**
+     * @param string $name
+     * @param string $type
+     * @param string $message
+     * @param int $total
+     * @param int $progress
+     * @param int $started
+     * @param int $completed
+     * @param bool $stoppable
+     * @param bool $running
+     * @param string $hash
+     */
+    public function __construct(
+        string $name,
+        string $type = null,
+        string $message = '',
+        int $total = 1,
+        int $progress = 0,
+        int $started = 0,
+        int $completed = 0,
+        bool $stoppable = false,
+        bool $running = true,
+        string $hash = ''
+    ) {
         $this->name = $name;
         $this->type = $type;
         $this->message = $message;
@@ -81,6 +111,9 @@ class Process extends AbstractModel implements ProcessInterface
         $this->total = $total;
         $this->started = $started;
         $this->completed = $completed;
+        $this->stoppable = $stoppable;
+        $this->running = $running;
+        $this->hash = $hash;
     }
 
     /**
@@ -306,5 +339,53 @@ class Process extends AbstractModel implements ProcessInterface
         }
 
         return $this->artifact->getId();
+    }
+
+    /**
+     * @param bool $stoppable
+     */
+    public function setStoppable(bool $stoppable)
+    {
+        $this->stoppable = $stoppable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getStoppable(): bool
+    {
+        return $this->stoppable;
+    }
+
+    /**
+     * @param bool $running
+     */
+    public function setRunning(bool $running)
+    {
+        $this->running = $running;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getRunning(): bool
+    {
+        return $this->running;
+    }
+
+    /**
+     * @param string $hash
+     */
+    public function setHash(string $hash)
+    {
+        $this->hash = $hash;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHash(): string
+    {
+        return $this->hash;
     }
 }
